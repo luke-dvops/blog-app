@@ -291,12 +291,17 @@ describe("Posts", () => {
         });
     });
   });
-  after((done) => {
-    // Perform any cleanup or additional tasks here
-    console.log("All tests have been executed. Ending the test suite.");
-    done(); // Ensure that 'done' is called to signal the end of the test suite
+  // ... (your existing code)
 
-    // Terminate the process
-    process.exit();
+  // Add an 'after' hook to end the test suite
+  after((done) => {
+    setTimeout(() => {
+      console.log("Terminating the test suite.");
+      // Terminate the process
+      process.exit();
+    }, 1000); // Adjust the timeout to be greater than 5000 milliseconds (5 seconds)
+
+    // Call 'done' immediately without waiting for the setTimeout
+    done();
   });
 });
