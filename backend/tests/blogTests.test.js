@@ -1,6 +1,6 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const app = require("../index"); // Update with the correct path to your Express app file
+const app = require("../index");
 const should = chai.should();
 
 chai.use(chaiHttp);
@@ -42,14 +42,12 @@ describe("Posts", () => {
     });
 
     it("it should create a new post without authentication", (done) => {
-      // This test is just a placeholder. You can remove it or modify it as needed.
       done();
     });
   });
 
   describe("/DELETE delete post by ID", () => {
     it("it should delete a post by ID", (done) => {
-      // Ensure postId is defined before attempting to use it
       if (!postId) {
         return done(new Error("postId is not defined"));
       }
@@ -68,17 +66,13 @@ describe("Posts", () => {
   });
   describe("/DELETE delete post by ID", () => {
     it("it should handle deleting a post with an invalid ID", (done) => {
-      // Assume an invalid postId for demonstration purposes
       const invalidPostId = "invalid_post_id";
 
       chai
         .request(app)
         .delete(`/api/posts/${invalidPostId}`)
         .end((err, res) => {
-          // Log the actual response body for debugging
-
-          // Check for a specific status code and error structure indicating invalid postId
-          res.should.have.status(500); // Adjust the expected status code as needed
+          res.should.have.status(500);
           res.body.should.have.property("name").eql("CastError");
           res.body.should.have.property("kind").eql("ObjectId");
           res.body.should.have.property("path").eql("_id");
@@ -102,16 +96,13 @@ describe("Posts", () => {
         .send(incompletePost)
         .end((err, res) => {
           if (err) {
-            console.error(err); // Log the error
+            console.error(err);
           }
 
-          // Assert that the response has a status code of 400
           res.should.have.status(500);
 
-          // Assert that the response body is an object
           res.body.should.be.a("object");
 
-          // Assert the structure of the response body matches the expected output
           res.body.should.deep.equal({
             errors: {
               userId: {
@@ -176,17 +167,13 @@ describe("Posts", () => {
         .send(duplicatePost)
         .end((err, res) => {
           if (err) {
-            console.error(err); // Log the error
+            console.error(err);
           }
 
-          // Assert that the response has a status code of 500 (Internal Server Error)
-          // or you can customize the expected status code based on your application's behavior
           res.should.have.status(500);
 
-          // Assert that the response body is an object
           res.body.should.be.a("object");
 
-          // Assert the structure of the response body matches the expected output
           res.body.should.deep.equal({
             index: 0,
             code: 11000,
@@ -271,10 +258,10 @@ describe("Posts", () => {
         .send(updatedPostData)
         .end((err, res) => {
           if (err) {
-            console.error(err); // Log the error
+            console.error(err);
           }
 
-          res.should.have.status(500); // Assuming 404 Not Found for an invalid post ID
+          res.should.have.status(500);
           res.body.should.deep.equal({
             stringValue: '"invalidPostId"',
             valueType: "string",
@@ -291,17 +278,13 @@ describe("Posts", () => {
         });
     });
   });
-  // ... (your existing code)
 
-  // Add an 'after' hook to end the test suite
   after((done) => {
     setTimeout(() => {
       console.log("Terminating the test suite.");
-      // Terminate the process
       process.exit();
-    }, 1000); // Adjust the timeout to be greater than 5000 milliseconds (5 seconds)
+    }, 1000);
 
-    // Call 'done' immediately without waiting for the setTimeout
     done();
   });
 });
