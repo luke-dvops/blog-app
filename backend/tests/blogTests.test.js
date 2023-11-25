@@ -5,7 +5,7 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-describe("Posts - Create", () => {
+describe("Posts", () => {
   let postId;
 
   describe("/POST create post without login", () => {
@@ -66,6 +66,29 @@ describe("Posts - Create", () => {
         });
     });
   });
+  describe("/DELETE delete post by ID", () => {
+    it("it should handle deleting a post with an invalid ID", (done) => {
+      // Assume an invalid postId for demonstration purposes
+      const invalidPostId = "invalid_post_id";
+
+      chai
+        .request(app)
+        .delete(`/api/posts/${invalidPostId}`)
+        .end((err, res) => {
+          // Log the actual response body for debugging
+
+          // Check for a specific status code and error structure indicating invalid postId
+          res.should.have.status(500); // Adjust the expected status code as needed
+          res.body.should.have.property("name").eql("CastError");
+          res.body.should.have.property("kind").eql("ObjectId");
+          res.body.should.have.property("path").eql("_id");
+          res.body.should.have.property("value").eql(invalidPostId);
+
+          done();
+        });
+    });
+  });
+
   describe("/POST create post with missing required fields", () => {
     it("it should return a validation error for missing required fields", (done) => {
       const incompletePost = {
@@ -179,9 +202,7 @@ describe("Posts - Create", () => {
         });
     });
   });
-});
 
-describe("Posts - Update", () => {
   describe("/PUT update post", () => {
     it("it should update a post", (done) => {
       const postIdToUpdate = "65607714f96b0d433b4d13da";
@@ -212,86 +233,70 @@ describe("Posts - Update", () => {
           done();
         });
     });
-    describe("/PUT update post - Missing Data", () => {
-      it("it should update a post even with missing data", (done) => {
-        const postIdToUpdate = "65607714f96b0d433b4d13da";
-        const updatedPostData = {
-          title: "test2",
-        };
-
-        chai
-          .request(app)
-          .put(`/api/posts/${postIdToUpdate}`)
-          .send(updatedPostData)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a("object");
-            res.body.should.have.property("title").eql("test2");
-
-            done();
-          });
-      });
-    });
-    describe("/PUT update post - Invalid post ID", () => {
-      it("it should return an error for updating with an invalid post ID", (done) => {
-        const invalidPostId = "invalidPostId";
-        const updatedPostData = {
-          title: "test2",
-          desc: "test22",
-          username: "test1",
-          userId: "65603b07d7debecc85789dfc",
-          categories: ["demo"],
-        };
-
-        chai
-          .request(app)
-          .put(`/api/posts/${invalidPostId}`)
-          .send(updatedPostData)
-          .end((err, res) => {
-            if (err) {
-              console.error(err); // Log the error
-            }
-
-            res.should.have.status(500); // Assuming 404 Not Found for an invalid post ID
-            res.body.should.deep.equal({
-              stringValue: '"invalidPostId"',
-              valueType: "string",
-              kind: "ObjectId",
-              value: "invalidPostId",
-              path: "_id",
-              reason: {},
-              name: "CastError",
-              message:
-                'Cast to ObjectId failed for value "invalidPostId" (type string) at path "_id" for model "Post"',
-            });
-
-            done();
-          });
-      });
-    });
   });
-});
-describe("Posts - Delete", () => {
-  describe("/DELETE delete post by using Invalid ID", () => {
-    it("it should handle deleting a post with an invalid ID", (done) => {
-      // Assume an invalid postId for demonstration purposes
-      const invalidPostId = "invalid_post_id";
+  describe("/PUT update post - Missing Data", () => {
+    it("it should update a post even with missing data", (done) => {
+      const postIdToUpdate = "65607714f96b0d433b4d13da";
+      const updatedPostData = {
+        title: "test2",
+      };
 
       chai
         .request(app)
-        .delete(`/api/posts/${invalidPostId}`)
+        .put(`/api/posts/${postIdToUpdate}`)
+        .send(updatedPostData)
         .end((err, res) => {
-          // Log the actual response body for debugging
-
-          // Check for a specific status code and error structure indicating invalid postId
-          res.should.have.status(500); // Adjust the expected status code as needed
-          res.body.should.have.property("name").eql("CastError");
-          res.body.should.have.property("kind").eql("ObjectId");
-          res.body.should.have.property("path").eql("_id");
-          res.body.should.have.property("value").eql(invalidPostId);
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have.property("title").eql("test2");
 
           done();
         });
     });
+  });
+  describe("/PUT update post - Invalid post ID", () => {
+    it("it should return an error for updating with an invalid post ID", (done) => {
+      const invalidPostId = "invalidPostId";
+      const updatedPostData = {
+        title: "test2",
+        desc: "test22",
+        username: "test1",
+        userId: "65603b07d7debecc85789dfc",
+        categories: ["demo"],
+      };
+
+      chai
+        .request(app)
+        .put(`/api/posts/${invalidPostId}`)
+        .send(updatedPostData)
+        .end((err, res) => {
+          if (err) {
+            console.error(err); // Log the error
+          }
+
+          res.should.have.status(500); // Assuming 404 Not Found for an invalid post ID
+          res.body.should.deep.equal({
+            stringValue: '"invalidPostId"',
+            valueType: "string",
+            kind: "ObjectId",
+            value: "invalidPostId",
+            path: "_id",
+            reason: {},
+            name: "CastError",
+            message:
+              'Cast to ObjectId failed for value "invalidPostId" (type string) at path "_id" for model "Post"',
+          });
+
+          done();
+        });
+    });
+  });
+  after((done) => {
+    // Perform any cleanup or additional tasks here
+    console.log("All tests have been executed. Ending the test suite.");
+    done(); // Ensure that 'done' is called to signal the end of the test suite
+
+    // Terminate the process
+    process.exit();
   });
 });
