@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
+const commentRoute=require('./routes/comments')
 
 //database
 const connectDB = async () => {
@@ -24,6 +25,7 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/comments",commentRoute)
 
 app.listen(process.env.PORT, () => {
   connectDB();
