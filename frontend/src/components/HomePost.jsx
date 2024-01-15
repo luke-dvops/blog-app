@@ -4,7 +4,7 @@ const HomePost = () => {
 	return (
 		<div className="w-full flex mt-8 space-x-4">
 			{/* left */}
-			<div className="w-[30%] h-[250px] flex justify-center items-center">
+			<div className="w-[35%] h-[200px] flex justify-center items-center">
 				<img
 					src="https://miro.medium.com/v2/resize:fit:828/format:webp/1*_LG3GFDIi8Ro-ReV2F5_sA.jpeg"
 					alt=""
@@ -18,7 +18,7 @@ const HomePost = () => {
 				</h1>
 				<div className="flex mb-2 text-sm font-semibold text-gray-500 items-center justify-between sm:mb-4">
 					<p>@Luke</p>
-					<div className="flex-space-x-2">
+					<div className="flex space-x-2">
 						<p>9/1/2024</p>
 						<p>11:07</p>
 					</div>
