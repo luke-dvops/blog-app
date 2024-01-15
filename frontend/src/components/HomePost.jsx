@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const HomePost = () => {
 	return (
@@ -33,4 +33,4 @@ const HomePost = () => {
 	);
 };
 
-export default HomePost;
+export default HomePost
