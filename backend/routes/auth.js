@@ -39,34 +39,27 @@ router.post("/register", async (req, res) => {
 
 
 //LOGIN
-router.post("/login", async (req, res) => {
-    try {
-        const user = await User.findOne({ email: req.body.email })
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found!" })
+router.post("/login",async (req,res)=>{
+    try{
+        const user=await User.findOne({email:req.body.email})
+       
+        if(!user){
+            return res.status(404).json("User not found!")
         }
-        const match = await bcrypt.compare(req.body.password, user.password)
-
-        if (!match) {
-            return res.status(401).json({ error: "Wrong credentials!" })
-        }
-        const token = jwt.sign({ _id: user._id, username: user.username, email: user.email }, process.env.SECRET, { expiresIn: "3d" })
-        const { password, ...info } = user._doc
-        // Set the token in a cookie
-        res.cookie("token", token, { httpOnly: true }).status(200).json(info);
-
-        // Assuming 'token' is the name of the cookie
-        const authToken = pm.response.cookies.token;
+        const match=await bcrypt.compare(req.body.password,user.password)
         
-        // Set the authentication token as an environment variable
-        pm.environment.set('authToken', authToken);
+        if(!match){
+            return res.status(401).json("Wrong credentials!")
+        }
+        const token=jwt.sign({_id:user._id,username:user.username,email:user.email},process.env.SECRET,{expiresIn:"3d"})
+        const {password,...info}=user._doc
+        res.cookie("token",token).status(200).json(info)
+
     }
-    catch (err) {
+    catch(err){
         res.status(500).json(err)
     }
 })
-
 
 
 
