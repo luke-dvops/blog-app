@@ -66,7 +66,7 @@ describe("Testing Authentication Routes", () => {
     });
 
     expect(res).to.have.status(404);
-    expect(res.body).to.have.property("error").to.equal("User not found!");
+    expect(res.body).to.have.property('error', 'User not found!');
   });
 
   // Test case for user login with incorrect password
