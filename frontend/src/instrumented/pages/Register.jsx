@@ -11,22 +11,33 @@ const Register = () => {
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const [error,setError]=useState(false)
+  const [usernameExists, setUsernameExists] = useState(false); // New state to track username existence
+
   const navigate=useNavigate()
 
   const handleRegister=async ()=>{
-    
-    try{
-      const res=await axios.post(URL+"/api/auth/register",{username,email,password})
-      setUsername(res.data.username)
-      setEmail(res.data.email)
-      setPassword(res.data.password)
-      setError(false)
-      navigate("/login")
+    try {
+      // Check if the username already exists
+      const usernameCheck = await axios.get(`${URL}/api/auth/check-username/${username}`);
       
-    }
-    catch(err){
-      setError(true)
-      console.log(err)
+      if (usernameCheck.data.exists) {
+        // Username already exists, prompt the user
+        setUsernameExists(true);
+        setError(false); // Clear any previous errors
+      } else {
+        // Username doesn't exist, proceed with registration
+        const res = await axios.post(`${URL}/api/auth/register`, { username, email, password });
+        setUsername(res.data.username);
+        setEmail(res.data.email);
+        setPassword(res.data.password);
+        setError(false);
+        setUsernameExists(false); // Reset the username existence state
+        navigate("/login");
+      }
+    } catch (err) {
+      setError(true);
+      setUsernameExists(false); // Reset the username existence state
+      console.log(err);
     }
 
   }
@@ -46,7 +57,8 @@ const Register = () => {
         <input onChange={(e)=>setEmail(e.target.value)} className='w-full px-4 py-2 border-2 border-black outline-0' type='email' placeholder='Enter your email'></input>
         <input onChange={(e)=>setPassword(e.target.value)} className='w-full px-4 py-2 border-2 border-black outline-0' type='password' placeholder='Enter your password'></input>
         <button onClick={handleRegister} className='w-full px-4 py-4 text-lg font-bold text-white bg-black rounded-lg hover:bg-gray-500 hover:text-black'>Register</button>
-        {error && <h3 className="text-red-500 text-sm ">Something went wrong</h3>}
+        {error && <h3 className="text-red-500 text-sm ">please enter correct username, email, & password</h3>}
+        {usernameExists && <h3 className="text-red-500 text-sm">Username is already in use. Please choose a new username.</h3>}
         <div className='flex justify-center items-center space-x-4'>
            <p>Already have an account?</p> 
            <p className='text-gray-500 hover:text-black'><Link to="/login">Login</Link></p>

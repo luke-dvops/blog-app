@@ -19,6 +19,7 @@
     "statements": 80
   },
   "scripts": {
+    "start": "node index.js",
     "test": "nyc mocha tests/*.test.js"
   },
   "keywords": [],
