@@ -93,5 +93,48 @@ router.get("/refetch", (req, res) => {
 })
 
 
+// CHECK USERNAME AVAILABILITY
+router.get('/check-username/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        // Check if the username exists in the database
+        const existingUser = await User.findOne({ username });
+
+        if (existingUser) {
+            // If the username is already in use, return an error message
+            return res.status(200).json({ exists: true, message: "Username is already in use. Please choose a new username." });
+        }
+
+        // If the username is available, return a success message
+        res.status(200).json({ exists: false, message: "Username is available." });
+    } catch (err) {
+        // Handle errors
+        res.status(500).json({ error: err.message });
+    }
+  });
+
+ 
+
+  // CHECK EMAIL AVAILABILITY
+router.get('/check-email/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        // Check if the email exists in the database
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            // If the email is already in use, return an error message
+            return res.status(200).json({ exists: true, message: "Email is already in use. Please use a different email address." });
+        }
+
+        // If the email is available, return a success message
+        res.status(200).json({ exists: false, message: "Email is available." });
+    } catch (err) {
+        // Handle errors
+        res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router
