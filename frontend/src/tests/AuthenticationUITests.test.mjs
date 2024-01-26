@@ -78,7 +78,7 @@ it('should load "Enter your password" placeholder text in the Login page', async
 
   it('should fill the Login form and submit successfully', async function () {
     await driver.get(`${appUrl}/login`);
-    await driver.findElement(By.css('input[type="email"]')).sendKeys('luketan@gmail.com');
+    await driver.findElement(By.css('input[type="email"]')).sendKeys('luketankl@gmail.com');
     await driver.findElement(By.css('input[type="password"]')).sendKeys('123456');
     await driver.findElement(By.css('button')).click();
 
@@ -93,7 +93,7 @@ it('should load "Enter your password" placeholder text in the Login page', async
     await driver.get(`${appUrl}/login`);
 
     // Find the email input field and enter a valid email
-    await driver.findElement(By.css('input[type="email"]')).sendKeys('luketan@gmail.com');
+    await driver.findElement(By.css('input[type="email"]')).sendKeys('luketankl@gmail.com');
 
     // Find the password input field and enter a valid password
     await driver.findElement(By.css('input[type="password"]')).sendKeys('123456');
