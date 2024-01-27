@@ -1,4 +1,4 @@
-import {React, useContext } from 'react'
+import React,{ useContext } from 'react'
 import Footer from "../components/Footer"
 import { Link, useNavigate  } from "react-router-dom";
 import { useState } from "react"
@@ -51,6 +51,7 @@ const Login = () => {
                <p className='text-gray-500 hover:text-black'><Link to="/register">Register</Link></p>
             </div>
         </div>
+  \      
     </div>
     <Footer/>
   </>
