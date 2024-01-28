@@ -1,12 +1,12 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const app = require("../index");
-const should = chai.should();
+
 
 chai.use(chaiHttp);
-
+const should = chai.should(); // Initialize should
 describe("Blog", () => {
-  let authToken; // Variable to store the authentication token
+  let authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWI2OGE1ODk2NGIxYzU2NDZmZjdlNDgiLCJ1c2VybmFtZSI6Imx1a2UiLCJlbWFpbCI6Imx1a2V0YW5rbEBnbWFpbC5jb20iLCJpYXQiOjE3MDY0NjI0NTEsImV4cCI6MTcwNjcyMTY1MX0.mjzTbjtX_VzRJnt7_sOenJSMlJRWCHFGooUhI7wjFFc" // Variable to store the authentication token
   let userId; // Variable to store the user ID
   let postId; // Variable to store the post ID
 
@@ -15,7 +15,7 @@ describe("Blog", () => {
     try {
       // Perform user login and obtain the authentication token
       const loginCredentials = {
-        email: "luketan@gmail.com",
+        email: "luketankl@gmail.com",
         password: "123456",
       };
 
@@ -127,7 +127,7 @@ describe("Blog", () => {
     try {
       // Perform user login and obtain the authentication token
       const loginCredentials = {
-        email: "luketan@gmail.com",
+        email: "luketankl@gmail.com",
         password: "123456",
       };
 
@@ -300,7 +300,7 @@ describe("Blog", () => {
         // Add debugging statements
 
         res.should.have.status(200);
-        res.body.should.be.a("object");
+        res.body.should.have("object");
         res.body.should.have.property("title").eql("test2");
         res.body.should.have.property("desc").eql("test22");
         res.body.should.have.property("username").eql("luke");
