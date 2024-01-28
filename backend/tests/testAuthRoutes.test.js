@@ -17,7 +17,7 @@ describe("Testing Authentication Routes", () => {
       // Attempt to register the first user
       const res1 = await chai.request(app).post(registerPath).send({
         username: "luke",
-        email: "luketan@gmail.com",
+        email: "luketankl@gmail.com",
         password: "123456",
       });
 
@@ -46,7 +46,7 @@ describe("Testing Authentication Routes", () => {
   // Test case for user login
   it("should login a user and return an authentication token", async () => {
     const res = await chai.request(app).post(loginPath).send({
-      email: "luketan@gmail.com",
+      email: "luketankl@gmail.com",
       password: "123456",
     });
 
@@ -72,7 +72,7 @@ describe("Testing Authentication Routes", () => {
   // Test case for user login with incorrect password
   it("should return an error when attempting to login with incorrect password", async () => {
     const res = await chai.request(app).post(loginPath).send({
-      email: "luketan@gmail.com",
+      email: "luketankl@gmail.com",
       password: "wrongpassword",
     });
 
