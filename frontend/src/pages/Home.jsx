@@ -37,7 +37,8 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [search]);
+    console.log()
+  }, [search], user);
 
   return (
     <>

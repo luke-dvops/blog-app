@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/pages/Login.jsx</title>
+    <title>Code coverage report for Login.jsx</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../prettify.css" />
-    <link rel="stylesheet" href="../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../sort-arrow-sprite.png);
+            background-image: url(sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/pages</a> Login.jsx</h1>
+        <h1><a href="index.html">All files</a> Login.jsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.08% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>58/61</span>
+                <span class='fraction'>61/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.19% </span>
+                <span class="strong">82.6% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>16/21</span>
+                <span class='fraction'>19/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">73.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/15</span>
+                <span class='fraction'>11/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.08% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>58/61</span>
+                <span class='fraction'>61/61</span>
             </div>
         
             
@@ -140,16 +140,16 @@
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -202,9 +202,9 @@ const Login = () =&gt; {
   const handleLogin=async()=&gt;{
     try{
       const res=await axios.post(URL+"/api/auth/login",{email,password},{withCredentials:true})
-<span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >      //console.log(res.data)</span></span>
-<span class="cstat-no" title="statement not covered" >      setUser(res.data)</span>
-<span class="cstat-no" title="statement not covered" >      navigate("/")</span>
+      //console.log(res.data)
+      setUser(res.data)
+      navigate("/")
 &nbsp;
     }
     catch(err){
@@ -227,8 +227,8 @@ const Login = () =&gt; {
     &lt;div className='w-full flex justify-center items-center h-[70vh]'&gt;
         &lt;div className='flex flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]'&gt;
         &lt;label htmlFor="loginText" className='text-xl font-bold text-left'&gt;Log in to your account&lt;/label&gt;
-            &lt;input onChange={<span class="fstat-no" title="function not covered" >(e)=&gt;setEmail(e.target.value)} </span>className='w-full px-4 py-2 border-2 border-black outline-0' type='email' placeholder='Enter your email'&gt;&lt;/input&gt;
-            &lt;input onChange={<span class="fstat-no" title="function not covered" >(e)=&gt;setPassword(e.target.value)} </span>className='w-full px-4 py-2 border-2 border-black outline-0' type='password' placeholder='Enter your password'&gt;&lt;/input&gt;
+            &lt;input onChange={(e)=&gt;setEmail(e.target.value)} className='w-full px-4 py-2 border-2 border-black outline-0' type='email' placeholder='Enter your email'&gt;&lt;/input&gt;
+            &lt;input onChange={(e)=&gt;setPassword(e.target.value)} className='w-full px-4 py-2 border-2 border-black outline-0' type='password' placeholder='Enter your password'&gt;&lt;/input&gt;
             &lt;button onClick={handleLogin} className='w-full px-4 py-4 text-lg font-bold text-white bg-black rounded-lg hover:bg-gray-500 hover:text-black'&gt;Log in&lt;/button&gt;
             {error &amp;&amp; &lt;h3 className="text-red-500 text-sm "&gt;Something went wrong, please enter correct email &amp; password&lt;/h3&gt;}
             &lt;div className='flex justify-center items-center space-x-4'&gt;
@@ -250,16 +250,16 @@ export default Login</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-27T12:09:32.678Z
+                at 2024-01-27T17:36:51.594Z
             </div>
-        <script src="../../prettify.js"></script>
+        <script src="prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../sorter.js"></script>
-        <script src="../../block-navigation.js"></script>
+        <script src="sorter.js"></script>
+        <script src="block-navigation.js"></script>
     </body>
 </html>
     

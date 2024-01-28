@@ -1,7 +1,7 @@
 import React,{ useContext } from 'react'
 import Footer from "../components/Footer"
-import { Link, useNavigate  } from "react-router-dom";
-import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react"
 import { UserContext } from "../context/UserContext";
 import axios from "axios"
 import { URL } from "../url"
@@ -11,13 +11,13 @@ const Login = () => {
   const [password,setPassword]=useState("")
   const [error,setError]=useState(false)
 
-  const navigate=useNavigate()
-  const {setUser}=useContext(UserContext)
+  const navigate= useNavigate()
+  const {user, setUser}=useContext(UserContext)
 
   const handleLogin=async()=>{
     try{
       const res=await axios.post(URL+"/api/auth/login",{email,password},{withCredentials:true})
-      //console.log(res.data)
+      console.log(res.data)
       setUser(res.data)
       navigate("/")
 
@@ -30,7 +30,10 @@ const Login = () => {
 
   }
 
- 
+  useEffect(() => {
+    console.log(user); // Log the user state after it has been updated
+  }, [user]);
+
   return (
   <>
   <div className="flex items-center justify-between px-6 md:px-[200px] py-4">
@@ -51,7 +54,7 @@ const Login = () => {
                <p className='text-gray-500 hover:text-black'><Link to="/register">Register</Link></p>
             </div>
         </div>
-  \      
+      
     </div>
     <Footer/>
   </>
