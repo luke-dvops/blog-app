@@ -1,3 +1,4 @@
+import React from 'react'; // Import React
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
@@ -66,8 +67,8 @@ const Navbar = () => {
         )}
         <h3></h3>
       </div>
-      <div onClick={showMenu} className="md:hidden text-lg">
-        <p className="cursor-pointer relative">
+      <div  onClick={showMenu} className="md:hidden text-lg" data-testid="menu-trigger">
+        <p  className="cursor-pointer relative">
           <FaBars />
         </p>
         {menu && <Menu />}

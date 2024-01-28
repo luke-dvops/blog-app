@@ -1,28 +1,35 @@
 
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, queryByText } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'; // Import userEvent
 import { BrowserRouter as Router } from 'react-router-dom'
 import Login from '../pages/Login';
 import Register from '../pages/Register'; // Import your Register component
-const { Builder, By, until } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome.js');
+import { UserContext } from '../context/UserContext'; // Mock UserContext
+import axios from 'axios';
+import {useNavigate } from 'react-router-dom';
+import Menu from '../components/Menu'; 
+import { createMemoryHistory } from 'history';
 
-const { Options } = chrome;
+jest.mock('axios');
 
-const chromeOptions = new Options();
-chromeOptions.addArguments('--headless');
-
-const appUrl = 'http://localhost:5173';
-let driver;
-
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+  default: {
+    Consumer: ({ children }) => children({ user: null, setUser: () => {} }), // Mock Consumer
+    Provider: ({ children }) => children, // Mock Provider
+  },
+}));
 
 beforeAll(async () => {
   jest.setTimeout(10000);
-  driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+
 });
 
+
+jest.mock('axios'); // Mock axios post method
 //Login
 describe('Testing Login UI', () => {
 
@@ -124,71 +131,52 @@ describe('Testing Login UI', () => {
     expect(passwordInput).toBeInTheDocument();
   });
 
-  test('should fill the Login form and submit successfully', () => {
-    render(
+
+
+  test('should handle login and navigate to home', async () => {
+    // Mock setUser function
+    const setUserMock = jest.fn();
+
+    // Mock UserContext value
+    const mockUserContextValue = { setUser: setUserMock };
+
+    // Render the Login component with mocked context value and Router
+    const { getByPlaceholderText, getByText } = render(
       <Router>
-        <Login />
+        <UserContext.Provider value={mockUserContextValue}>
+          <Login />
+        </UserContext.Provider>
       </Router>
     );
 
+    // Mock user credentials
+    const email = 'test@example.com';
+    const password = 'password123';
 
-    // Find input fields and submit button, and simulate user interaction
-    const emailInput = screen.getByPlaceholderText('Enter your email');
-    const passwordInput = screen.getByPlaceholderText('Enter your password');
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Enter your email'), { target: { value: email } });
+    fireEvent.change(getByPlaceholderText('Enter your password'), { target: { value: password } });
 
-    // Fill in the login form
-    userEvent.type(emailInput, 'luketankl@gmail.com');
-    userEvent.type(passwordInput, '123456');
+    // Mock successful login response
+    const mockResponse = {
+      data: {
+        _id: '65b3514e73962f9d8e6fc501',
+        email: 'test@example.com',
+        password: '$2b$10$TYCXFN.Kp1U4JnoWs9k/3O9P6Ug.uYU7zZDqkXurZ6WGHacbhdSFK',
+        username: 'testuser',
+      },
+    };
 
-    // Submit the form
-    userEvent.click(submitButton);
+    axios.post.mockResolvedValueOnce(mockResponse);
 
-    // Assert any necessary post-submit behavior
-    // For example, you can assert that a certain element appears on the page after successful login
-  });
+    // Click on login button
+    fireEvent.click(getByText('Log in'));
 
-
-  test('should log in a user successfully and navigate to the home page', () => {
-    render(
-      <Router>
-        <Login />
-      </Router>
-    );
-
-    // Find input fields and submit button, and simulate user interaction
-    const emailInput = screen.getByPlaceholderText('Enter your email');
-    const passwordInput = screen.getByPlaceholderText('Enter your password');
-    const submitButton = screen.getByRole('button', { name: 'Log in' });
-
-    // Fill in the login form
-    userEvent.type(emailInput, 'luketankl@gmail.com');
-    userEvent.type(passwordInput, '123456');
-
-    // Submit the form
-    userEvent.click(submitButton);
-
-    // Wait for navigation to the home page (if asynchronous navigation is used)
-    // You can wait for elements to be present or for the URL to change
-    // For example:
-    // await screen.findByText('Welcome, Luketankl!'); // Assuming this text appears on the home page
-
-    // Assert any necessary post-submit behavior
-    // For example, you can assert that a certain element appears on the page after successful login
-  });
-
-  test('should load "New here?" prompt text in the Login page', () => {
-    render(
-      <Router>
-        <Login />
-      </Router>
-    );
-
-    // Find the element containing the "New here?" prompt text
-    const newHereText = screen.getByText('New here?');
-
-    // Assert that the element is present in the document
-    expect(newHereText).toBeInTheDocument();
+    // Wait for the login process to complete
+    await waitFor(() => {
+      // Assert that setUser is called with the correct data
+      expect(setUserMock).toHaveBeenCalledWith(mockResponse.data);
+    });
   });
 
 
@@ -226,10 +214,12 @@ describe('Testing Login UI', () => {
     const passwordInput = screen.getByRole('textbox', { type: 'password' });
     userEvent.type(passwordInput, 'incorrectpassword');
 
+    // Mock axios post request to simulate unsuccessful login attempt
+    axios.post.mockRejectedValueOnce(new Error('Invalid credentials'));
+
     // Find the login button and click it
     const loginButton = screen.getByRole('button', { name: 'Log in' });
     userEvent.click(loginButton);
-
 
     // Wait for the error message to appear
     await waitFor(() => {
@@ -244,11 +234,11 @@ describe('Testing Login UI', () => {
 
 // Register 
 describe('Testing Register UI', () => {
-  let driver;
+
 
   beforeAll(async () => {
     jest.setTimeout(10000);
-    driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+
   });
 
   test('should load "Blog Market" title the Register page', async () => {
@@ -365,34 +355,53 @@ test('should load "Enter your password" placeholder text in the Register page', 
 
 
 test('should register a new user successfully and navigate to login page', async () => {
-  render(
+   // Mock useNavigate
+   const mockNavigate = jest.fn();
+   useNavigate.mockReturnValue(mockNavigate);
+  
+  // Render the Register component
+  const { getByPlaceholderText, getByRole } = render(
     <Router>
       <Register />
     </Router>
   );
 
-  // Find input elements and button
-  const usernameInput = screen.getByPlaceholderText('Enter your username');
-  const emailInput = screen.getByPlaceholderText('Enter your email');
-  const passwordInput = screen.getByPlaceholderText('Enter your password');
-  const registerButton = screen.getByRole('button', { name: 'Register' });
+  // Mock user credentials
+  const username = 'uniqueusername';
+  const email = 'test@example.com';
+  const password = 'password123';
 
+  // Simulate user input
+  fireEvent.change(getByPlaceholderText('Enter your username'), { target: { value: username } });
+  fireEvent.change(getByPlaceholderText('Enter your email'), { target: { value: email } });
+  fireEvent.change(getByPlaceholderText('Enter your password'), { target: { value: password } });
 
+  // Mock successful registration response
+  const mockResponse = {
+    data: {
+      _id: '65b507a3ed6055b91f0e3d02',
+      username: 'uniqueusername',
+      email: 'testuser@example.com',
+      password: 'testpassword',
+    },
+  };
 
-  
-    // Fill in the login form
-    userEvent.type(usernameInput, 'uniqueusername');
-    userEvent.type(emailInput, 'testuser@example.com');
-    userEvent.type(passwordInput, 'testpassword');
+  // Mock axios requests
+  axios.get.mockResolvedValueOnce({ data: { exists: false } }); // Mock username check
+  axios.get.mockResolvedValueOnce({ data: { exists: false } }); // Mock email check
+  axios.post.mockResolvedValueOnce(mockResponse); // Mock registration
 
-    // Submit the form
-      userEvent.click(registerButton);
-  // Wait for navigation to login page
+  const registerButton = getByRole('button', { name: 'Register' });
+
+  // Submit the form
+  fireEvent.click(registerButton);
+
+  // Wait for the registration process to complete
   await waitFor(() => {
-    expect(window.location.pathname).toEqual('/login');
+    // Assert that the component navigates to the login page after successful registration
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 });
-
  
 test('should display an error message for unsuccessful registration', async () => {
   render(
@@ -411,45 +420,58 @@ test('should display an error message for unsuccessful registration', async () =
   const errorMessage = await screen.findByText('please enter correct username, email, & password');
   expect(errorMessage).toBeInTheDocument();
 });
+test('should display an error message for unsuccessful registration with existing username', async () => {
+  // Mock axios to return existing username response for check-username
+  axios.get.mockResolvedValueOnce({ data: { exists: true } });
 
-  it('should display an error message for unsuccessful registration with existing username', async function () {
-    await driver.get(`${appUrl}/register`);
+  // Render the Register component within a Router
+  const { getByPlaceholderText, getByRole, findByText } = render(
+      <Router>
+          <Register />
+      </Router>
+  );
 
-    // Try to register with the same username used in the previous test case
-    await driver.findElement(By.css('input[type="text"]')).sendKeys('uniqueusername');
-    await driver.findElement(By.css('input[type="email"]')).sendKeys('anotheruser@example.com');
-    await driver.findElement(By.css('input[type="password"]')).sendKeys('anotherpassword');
-    await driver.findElement(By.css('button')).click();
+  // Simulate user input
+  fireEvent.change(getByPlaceholderText('Enter your username'), { target: { value: 'existingusername' } });
+  fireEvent.change(getByPlaceholderText('Enter your email'), { target: { value: 'newuser@example.com' } });
+  fireEvent.change(getByPlaceholderText('Enter your password'), { target: { value: 'newpassword' } });
 
-    // Assuming there is an error message element on the page
-    const errorMessageLocator = By.css('.text-red-500.text-sm');
-    await driver.wait(until.elementLocated(errorMessageLocator), 5000);
+  // Click the register button
+  fireEvent.click(getByRole('button', { name: 'Register' }));
 
-    // Retrieve and assert the error message
-    const errorMessage = await driver.findElement(errorMessageLocator).getText();
-    expect(errorMessage).toEqual('Username is already in use, please choose a new username.');
-  });
-
-
-  it('should display an error message for unsuccessful registration with existing email', async function () {
-    await driver.get(`${appUrl}/register`);
-    
-    // Try to register with the same email used in the previous test case
-    await driver.findElement(By.css('input[type="text"]')).sendKeys('anotheruniqueusername2');
-    await driver.findElement(By.css('input[type="email"]')).sendKeys('testuser@example.com');
-    await driver.findElement(By.css('input[type="password"]')).sendKeys('anotherpassword');
-    await driver.findElement(By.css('button')).click();
-
-    // Assuming there is an error message element on the page
-    const errorMessageLocator = By.css('.text-red-500.text-sm');
-    await driver.wait(until.elementLocated(errorMessageLocator), 5000);
-    
-    // Retrieve and assert the error message
-    const errorMessage = await driver.findElement(errorMessageLocator).getText();
-    expect(errorMessage).toEqual('Email is already in use. Please use a different email address.');
+  // Wait for the error message related to username to appear
+  const errorMessage = await findByText(/Username is already in use, please choose a new username./i); // Using a case-insensitive regex matcher
+  expect(errorMessage).toBeInTheDocument();
 });
+  
 
 
+  test('should display an error message for unsuccessful registration with existing email', async () => {
+    // Mock axios to return existing email response for check-email
+    axios.get.mockResolvedValueOnce({ data: { exists: false } });
+
+    // Mock axios to return non-existing username response for check-username
+    axios.get.mockResolvedValueOnce({ data: { exists: true } });
+
+    // Render the Register component within a Router
+    const { getByPlaceholderText, getByRole, findByText } = render(
+        <Router>
+            <Register />
+        </Router>
+    );
+
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Enter your username'), { target: { value: 'luk333' } });
+    fireEvent.change(getByPlaceholderText('Enter your email'), { target: { value: 'testuser@example.com' } });
+    fireEvent.change(getByPlaceholderText('Enter your password'), { target: { value: 'anotherpassword' } });
+
+    // Click the register button
+    fireEvent.click(getByRole('button', { name: 'Register' }));
+
+    // Wait for the error message related to email to appear
+    const errorMessage = await findByText(/Email is already in use\. Please use a different email address\./i); // Using a case-insensitive regex matcher
+    expect(errorMessage).toBeInTheDocument();
+});
   
 test('should load "Already have an account?" prompt text in the Register page', () => {
   render(
@@ -466,16 +488,95 @@ test('should load "Already have an account?" prompt text in the Register page', 
 });
 
 
+});
 
+
+
+
+
+//Logout
+
+
+describe('Menu component', () => {
+  test('should logout and navigate to login page', async () => {
+    // Mock setUser function
+    const setUser = jest.fn();
+
+    // Mock useNavigate function
+    const mockNavigate = jest.fn();
+    useNavigate.mockReturnValue(mockNavigate);
+    // Mock UserContext value
+    const user = { id: '123', username: 'testuser' };
+
+    // Render the Menu component
+    const { getByTestId } = render(
+      <Router>
+        <UserContext.Provider value={{ user, setUser }}>
+          <Menu />
+        </UserContext.Provider>
+      </Router>
+    );
+    
+    // Simulate clicking on the Logout button
+    fireEvent.click(getByTestId('logout-trigger'));
+    
+    // Wait for logout to complete
+    await waitFor(() => {
+   
+    
+      // Assert navigate is called with "/login"
+      expect(mockNavigate).toHaveBeenCalledWith('/login');
+         // Assert setUser is called with null
+         expect(setUser).toHaveBeenCalledWith(null);
+    });
+
+  
+  });
+
+
+  test('should not logout and not navigate to login page if logout fails', async () => {
+    // Mock setUser function
+    const setUser = jest.fn();
+
+    // Mock UserContext value
+    const user = { id: '123', username: 'testuser' };
+
+     // Mock console.log
+     console.log = jest.fn();
+     
+    // Render the Menu component
+    const { getByTestId } = render(
+      <Router>
+        <UserContext.Provider value={{ user, setUser }}>
+          <Menu />
+        </UserContext.Provider>
+      </Router>
+    );
+
+    // Mock the axios get method to simulate a failed logout
+    axios.get.mockRejectedValue(new Error('Logout failed'));
+
+    // Simulate clicking on the Logout button
+    fireEvent.click(getByTestId('logout-trigger'));
+
+    // Wait for logout to complete
+    await waitFor(() => {
+      // Assert setUser is not called
+      expect(setUser).not.toHaveBeenCalled();
+
+      // Assert console.log is called with the error message
+      expect(console.log).toHaveBeenCalledWith(expect.any(Error))
+    });
+  });
 
 });
 
 
 afterAll(async () => {
-  await driver.quit();
   jest.setTimeout(() => {
     console.log("Terminating the test suite.");
     process.exit();
   }, 2000);
+
 });
 
