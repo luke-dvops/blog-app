@@ -1,3 +1,4 @@
+
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, queryByText } from '@testing-library/react';
@@ -576,4 +577,6 @@ afterAll(async () => {
     console.log("Terminating the test suite.");
     process.exit();
   }, 2000);
+
 });
+
