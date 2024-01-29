@@ -497,7 +497,7 @@ test('should load "Already have an account?" prompt text in the Register page', 
 //Logout
 
 
-describe('Menu component', () => {
+describe('Testing Logout UI', () => {
   test('should logout and navigate to login page', async () => {
     // Mock setUser function
     const setUser = jest.fn();
