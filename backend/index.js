@@ -20,6 +20,7 @@ const connectDB = async () => {
   }
 };
 
+
 //middlewares
 dotenv.config();
 app.use(express.json());

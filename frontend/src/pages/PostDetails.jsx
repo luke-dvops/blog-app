@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate, useParams } from "react-router-dom"
 import Comment from "../components/Comment"
 import Footer from "../components/Footer"
@@ -20,18 +21,18 @@ const PostDetails = () => {
   const [comment,setComment]=useState("")
   const [loader,setLoader]=useState(false)
   const navigate=useNavigate()
-  
+  const [errorMessage, setErrorMessage] = useState('');
+  const [fetchPostError, setFetchPostError] = useState('');
 
-  const fetchPost=async()=>{
-    try{
-      const res= await axios.get(URL+"/api/posts/"+postId)
-      // console.log(res.data)
-      setPost(res.data)
+  const fetchPost = async () => {
+    try {
+      const res = await axios.get(URL + "/api/posts/" + postId);
+      setPost(res.data);
+    } catch (err) {
+      console.log(err);
+      setFetchPostError('Error fetching post details');
     }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
 
   const handleDeletePost=async ()=>{
 
@@ -52,19 +53,18 @@ const PostDetails = () => {
 
   },[postId])
 
-  const fetchPostComments=async()=>{
-    setLoader(true)
-    try{
-      const res=await axios.get(URL+"/api/comments/post/"+postId)
-      setComments(res.data)
-      setLoader(false)
-
+  const fetchPostComments = async () => {
+    setLoader(true);
+    try {
+      const res = await axios.get(URL + "/api/comments/post/" + postId);
+      setComments(res.data);
+      setLoader(false);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Error fetching comments');
+      console.log('Error state set'); // Add this for debugging
     }
-    catch(err){
-      setLoader(true)
-      console.log(err)
-    }
-  }
+  };
 
   useEffect(()=>{
     fetchPostComments()
@@ -94,6 +94,9 @@ const PostDetails = () => {
   return (
     <div>
         <Navbar/>
+        {fetchPostError && (
+  <div data-testid="fetch-post-error">{fetchPostError}</div>
+)}
         {loader?<div className="h-[80vh] flex justify-center items-center w-full"><Loader/></div>:<div className="px-8 md:px-[200px] mt-8">
         <div className="flex justify-between items-center">
          <h1 className="text-2xl font-bold text-black md:text-3xl">{post.title}</h1>
@@ -123,7 +126,9 @@ const PostDetails = () => {
             
           </div>
          </div>
-         <div className="flex flex-col mt-4">
+         {errorMessage && (<div data-testid="error-message">{errorMessage}</div>)}
+
+         <div data-testid="comment-heading" className="flex flex-col mt-4">
          <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
          {comments?.map((c)=>(
           <Comment key={c._id} c={c} post={post} />
@@ -133,7 +138,7 @@ const PostDetails = () => {
          {/* write a comment */}
          <div className="w-full flex flex-col mt-4 md:flex-row">
           <input onChange={(e)=>setComment(e.target.value)} type="text" placeholder="Write a comment" className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"/>
-          <button onClick={postComment} className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0">Add Comment</button>
+          <button data-testid="add-comment" onClick={postComment} className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0">Add Comment</button>
          </div>
         </div>}
         <Footer/>

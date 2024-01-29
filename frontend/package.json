@@ -19,7 +19,8 @@
       "src/"
     ],
     "testMatch": [
-      "<rootDir>/src/tests/AuthenticationUITests.test.js"
+      "<rootDir>/src/tests/AuthenticationUITests.test.js",
+      "<rootDir>/src/tests/CommentUITests.test.js"
     ],
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
@@ -30,6 +31,9 @@
       "<rootDir>/src/pages/Login.jsx",
       "<rootDir>/src/pages/Register.jsx",
       "<rootDir>/src/components/Menu.jsx",
+      "<rootDir>/src/pages/EditComment.jsx",
+      "<rootDir>/src/pages/PostDetails.jsx",
+      "<rootDir>/src/components/Comment.jsx",
       "!<rootDir>/src/tests/**/*.test.js"
     ],
     "coverageReporters": [

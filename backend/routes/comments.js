@@ -46,4 +46,29 @@ router.delete("/:id",verifyToken,async (req,res)=>{
         res.status(500).json(err)
     }
 })
+
+//GET POST COMMENTS
+router.get("/post/:postId",async (req,res)=>{
+  try{
+      const comments=await Comment.find({postId:req.params.postId})
+      res.status(200).json(comments)
+  }
+  catch(err){
+      res.status(500).json(err)
+  }
+})
+
+// GET a specific comment by ID
+router.get("/:commentId", async (req, res) => {
+  try {
+      const comment = await Comment.findById(req.params.commentId);
+      if (!comment) {
+          return res.status(404).json({ message: "Comment not found" });
+      }
+      res.status(200).json(comment);
+  } catch (err) {
+      res.status(500).json(err);
+  }
+});
+
 module.exports = router;
