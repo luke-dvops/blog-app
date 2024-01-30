@@ -58,9 +58,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "concurrently \"npm run start-backend\" \"npm run test-frontend\"",
-    "start-backend": "cd ../backend && npm start",
-    "test-frontend": "concurrently \"npm run dev\" \"jest --coverage --coverageReporters=text text-summary\"",
+    "test": "jest --coverage --coverageReporters=text text-summary",
     "clear-cache": "jest --clearCache"
   },
   "dependencies": {
