@@ -16,12 +16,16 @@ const EditComment = () => {
   const fetchComment = async () => {
     try {
       const res = await axios.get(`${URL}/api/comments/${commentId}`);
-      setText(res.data.comment);
+      if (res.data && res.data.comment) {
+        setText(res.data.comment);
+      } 
     } catch (err) {
-      setError("An error occurred while fetching the comment.");
       console.error(err);
+      setError("An error occurred while fetching the comment.");
     }
   };
+  
+  
 
   const handleUpdate = async (e) => {
     e.preventDefault();

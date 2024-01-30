@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Login.jsx</title>
+    <title>Code coverage report for pages/Login.jsx</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="prettify.css" />
-    <link rel="stylesheet" href="base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> Login.jsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">pages</a> Login.jsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>61/61</span>
+                <span class='fraction'>64/64</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.6% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/23</span>
+                <span class='fraction'>20/24</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>61/61</span>
+                <span class='fraction'>64/64</span>
             </div>
         
             
@@ -123,7 +123,10 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">42x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -156,6 +159,9 @@
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -185,8 +191,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import React,{ useContext } from 'react'
 <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import Footer from "../components/Footer"</span></span></span></span></span></span></span></span>
-import { Link, useNavigate  } from "react-router-dom";
-import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react"
 import { UserContext } from "../context/UserContext";
 import axios from "axios"
 import { URL } from "../url"
@@ -196,13 +202,13 @@ const Login = () =&gt; {
   const [password,setPassword]=useState("")
   const [error,setError]=useState(false)
 &nbsp;
-  const navigate=useNavigate()
-  const {setUser}=useContext(UserContext)
+  const navigate= useNavigate()
+  const {user, setUser}=useContext(UserContext)
 &nbsp;
   const handleLogin=async()=&gt;{
     try{
       const res=await axios.post(URL+"/api/auth/login",{email,password},{withCredentials:true})
-      //console.log(res.data)
+      console.log(res.data)
       setUser(res.data)
       navigate("/")
 &nbsp;
@@ -215,7 +221,10 @@ const Login = () =&gt; {
 &nbsp;
   }
 &nbsp;
- 
+  useEffect(() =&gt; {
+    console.log(user); // Log the user state after it has been updated
+  }, [user]);
+&nbsp;
   return (
   &lt;&gt;
   &lt;div className="flex items-center justify-between px-6 md:px-[200px] py-4"&gt;
@@ -236,7 +245,7 @@ const Login = () =&gt; {
                &lt;p className='text-gray-500 hover:text-black'&gt;&lt;Link to="/register"&gt;Register&lt;/Link&gt;&lt;/p&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-  \      
+      
     &lt;/div&gt;
     &lt;Footer/&gt;
   &lt;/&gt;
@@ -250,16 +259,16 @@ export default Login</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-27T17:36:51.616Z
+                at 2024-01-30T02:02:55.799Z
             </div>
-        <script src="prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="sorter.js"></script>
-        <script src="block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     

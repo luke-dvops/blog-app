@@ -13,8 +13,6 @@ import EditComment from '../pages/EditComment';
 import PostDetails from '../pages/PostDetails';
 import Comment from '../components/Comment';
 
-import * as reactRouterDom from 'react-router-dom';
-
 jest.mock('axios');
 
 jest.mock('react-router-dom', () => ({
@@ -153,39 +151,41 @@ describe('Testing Comment Component UI', () => {
 
 describe('Testing Edit Comment page UI', () => {
 
-  test('renders correctly with initial state', () => {
-    render(
-      <Router>
-        <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
-          <EditComment />
-        </UserContext.Provider>
-      </Router>
-    );
-  
+  test('renders correctly with initial state',async () => {
+    await act(async () => {
+      render(
+        <Router>
+          <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
+            <EditComment />
+          </UserContext.Provider>
+        </Router>
+      );
+    });
+    await waitFor(() => {
     expect(screen.getByPlaceholderText('Enter comment text')).toBeInTheDocument();
+  });
   });
 
   test('it fetches comment selected and updates state', async () => {
     const mockComment = { comment: 'Test comment' };
     axios.get.mockResolvedValue({ data: mockComment });
-
-    render(
-      <Router>
-      <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
-        <EditComment />
-      </UserContext.Provider>
-    </Router>
-    );
-
-    // Wait for the effect to run and the state to update
+    await act(async () => {
+      render(
+        <Router>
+          <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
+            <EditComment />
+          </UserContext.Provider>
+        </Router>
+      );
+    });
     await waitFor(() => {
-      const textarea = screen.getByPlaceholderText('Enter comment text');
-      expect(textarea.value).toBe(mockComment.comment);
+      expect(screen.getByPlaceholderText('Enter comment text').value).toBe(mockComment.comment);
     });
   });
 
-  test('updates textarea on user input', () => {
+  test('updates textarea on user input', async() => {
     const user = { _id: 'testUserId' };
+    await act(async () => {
     render(
       <Router>
         <UserContext.Provider value={{ user }}>
@@ -194,12 +194,14 @@ describe('Testing Edit Comment page UI', () => {
       </Router>
       
     );
-
+  });
+  await waitFor(() => {
     const newText = 'Updated comment text';
     const textarea = screen.getByPlaceholderText('Enter comment text');
     fireEvent.change(textarea, { target: { value: newText } });
 
     expect(textarea.value).toBe(newText);
+  });
   });
 
   test('should load the update button', () => {
@@ -223,24 +225,26 @@ describe('Testing Edit Comment page UI', () => {
   });
 
   test('updates comment after the button is clicked', async () => {
-    // Mocking axios.put
     axios.put.mockResolvedValue({ data: { postId: 'testPostId' } });
-
-    render(
-      <Router>
-        <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
-          <EditComment />
-        </UserContext.Provider>
-      </Router>
-    );
-
-    // Simulating user input
+  
+    await act(async () => {
+      render(
+        <Router>
+          <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
+            <EditComment />
+          </UserContext.Provider>
+        </Router>
+      );
+    });
+  
     const textarea = screen.getByPlaceholderText('Enter comment text');
-    fireEvent.change(textarea, { target: { value: 'Updated comment' } });
-
     const updateButton = screen.getByText('Update');
-    fireEvent.click(updateButton);
-
+  
+    await act(async () => {
+      fireEvent.change(textarea, { target: { value: 'Updated comment' } });
+      fireEvent.click(updateButton);
+    });
+  
     await waitFor(() => {
       expect(axios.put).toHaveBeenCalledWith(
         expect.stringContaining('/api/comments/'), 
@@ -248,7 +252,7 @@ describe('Testing Edit Comment page UI', () => {
         { withCredentials: true }
       );
     });
-  });
+  });  
 
   test('navigates on successful update', async () => {
     const mockNavigate = require('react-router-dom').useNavigate();
@@ -275,37 +279,30 @@ describe('Testing Edit Comment page UI', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/posts/post/' + mockComment.postId);
     });
   });
+  
 
-  test('handles API error correctly', async () => {
-    // Mock the API call to throw an error
+  test('handles update error correctly', async () => {
     axios.put.mockRejectedValue(new Error('API error'));
-
-    render(
-      <Router>
-      <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
-        <EditComment />
-      </UserContext.Provider>
-      </Router>
-    );
-
+    await act(async () => {
+      render(
+        <Router>
+          <UserContext.Provider value={{ user: { _id: 'testUserId' } }}>
+            <EditComment />
+          </UserContext.Provider>
+        </Router>
+      );
+    });
     const textarea = screen.getByPlaceholderText('Enter comment text');
     const updateButton = screen.getByText('Update');
-
-    // Simulate user input
-    fireEvent.change(textarea, { target: { value: 'Updated comment text' } });
-
-    // Simulate button click to trigger the API call
-    fireEvent.click(updateButton);
-
-    // Wait for the component to handle the error
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      fireEvent.change(textarea, { target: { value: 'Updated comment text' } });
+      fireEvent.click(updateButton);
     });
-
-    const errorMessage = screen.getByText('An error occurred while updating the comment.');
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('An error occurred while updating the comment.')).toBeInTheDocument();
+    });
   });
-
+  
   test('handles invalid comment ID', async () => {
 
     const invalidCommentId = 'invalidCommentId';
@@ -381,8 +378,11 @@ describe('Testing Edit Comment page UI', () => {
       const textarea = screen.getByPlaceholderText('Enter comment text');
       expect(textarea.value).toBe(longText);
     });
-  });  
-  
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 });
 
 // POST DETAILS PAGE
@@ -393,10 +393,10 @@ describe('Comment for PostDetails page', () => {
     // Mock response for post details and comments
     axios.get.mockImplementation((url) => {
       if (url.includes('/api/posts/')) {
-        return Promise.resolve({ data: { /* mock post data */ } });
+        return Promise.resolve({ data: { _id: 'comment1' } });
       }
       if (url.includes('/api/comments/post/')) {
-        return Promise.resolve({ data: [/* mock comments data */] });
+        return Promise.resolve({ data: [{ _id: 'comment1', comment: 'Test comment' }] });
       }
       return Promise.reject(new Error('not found'));
     });
@@ -418,10 +418,10 @@ describe('Comment for PostDetails page', () => {
     // Mock response for post details and comments
     axios.get.mockImplementation((url) => {
       if (url.includes('/api/posts/')) {
-        return Promise.resolve({ data: { /* mock post data */ } });
+        return Promise.resolve({ data: { _id: 'comment1'} });
       }
       if (url.includes('/api/comments/post/')) {
-        return Promise.resolve({ data: [/* mock comments data */] });
+        return Promise.resolve({ data: [ { _id: 'comment1', comment: 'Test comment' } ] });
       }
       return Promise.reject(new Error('not found'));
     });
@@ -463,10 +463,10 @@ describe('Comment for PostDetails page', () => {
     // Mock response for post details and comments
     axios.get.mockImplementation((url) => {
       if (url.includes('/api/posts/')) {
-        return Promise.resolve({ data: { /* mock post data */ } });
+        return Promise.resolve({ data: { _id: 'comment1' } });
       }
       if (url.includes('/api/comments/post/')) {
-        return Promise.resolve({ data: [/* mock comments data */] });
+        return Promise.resolve({ data: [{ _id: 'comment1', comment: 'Test comment' }] });
       }
       return Promise.reject(new Error('not found'));
     });
