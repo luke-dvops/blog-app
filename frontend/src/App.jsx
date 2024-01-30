@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import PostDetails from "./pages/PostDetails";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
+import EditComment from "./pages/EditComment"; // Import your EditComment component
 import { UserContextProvider } from "./context/UserContext";
 import MyBlogs from "./pages/MyBlogs";
 
@@ -18,6 +19,7 @@ const App = () => {
         <Route exact path="/write" element={<CreatePost />} />
         <Route exact path="/posts/post/:id" element={<PostDetails />} />
         <Route exact path="/edit/:id" element={<EditPost />} />
+        <Route exact path="/edit-comment/:id" element={<EditComment />} /> 
         <Route exact path="/myblogs/:id" element={<MyBlogs />} />
       </Routes>
     </UserContextProvider>
