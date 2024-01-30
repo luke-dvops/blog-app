@@ -11,37 +11,37 @@ const loginPath = "/api/auth/login";
 describe("Testing Authentication Routes", () => {
   let token; // Variable to store the authentication token for further requests
 
-  // Test case for user registration
-  it("should register a new user or handle duplicate username", async () => {
-    try {
-      // Attempt to register the first user
-      const res1 = await chai.request(app).post(registerPath).send({
-        username: "luke",
-        email: "luketankl@gmail.com",
-        password: "123456",
-      });
+ // Test case for user registration
+ it("should register a new user successfully", async () => {
+  try {
+    const res = await chai.request(app).post(registerPath).send({
+      username: "luke",
+      email: "luketankl@gmail.com",
+      password: "123456",
+    });
 
-      expect(res1).to.have.status(200);
-      expect(res1.body).to.have.property("username").to.equal("luke");
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property("username").to.equal("luke");
+  } catch (error) {
+    throw error;
+  }
+});
 
-      // Attempt to register a user with the same username (duplicate)
-      const res2 = await chai.request(app).post(registerPath).send({
-        username: "luke", // Use the same username
-        email: "anotheruser@gmail.com",
-        password: "654321",
-      });
+it("should handle duplicate username", async () => {
+  try {
+    const res = await chai.request(app).post(registerPath).send({
+      username: "luke",
+      email: "anotheruser@gmail.com",
+      password: "654321",
+    });
 
-      // Check if the second registration fails due to a duplicate username
-      expect(res2).to.have.status(400);
-      expect(res2.body)
-        .to.have.property("error")
-        .to.equal("Username is already in use. Please choose a new username.");
-      // Add more assertions based on your error handling logic for duplicate username
-    } catch (error) {
-      // Handle errors, if any
-      throw error;
-    }
-  });
+    expect(res).to.have.status(400);
+    expect(res.body).to.have.property("error").to.equal("Username is already in use. Please choose a new username.");
+  } catch (error) {
+    throw error;
+  }
+});
+
 
   // Test case for user login
   it("should login a user and return an authentication token", async () => {
