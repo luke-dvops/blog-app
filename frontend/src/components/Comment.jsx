@@ -1,4 +1,5 @@
 import React from 'react';
+
 import axios from "axios";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
@@ -30,6 +31,7 @@ const Comment = ({ c, post }) => {
         <h3 data-testid='author' className="font-bold text-gray-600">@{c.author}</h3>
         <div data-testid='updated-time' className="flex justify-center items-center space-x-4">
           <p>{new Date(c.updatedAt).toLocaleString()}</p>
+          
           {user?._id === c?.userId && (
             <div className="flex items-center justify-center space-x-2">
               <BiEdit className="cursor-pointer" onClick={() => navigateToEditComment(c._id)} data-testid='edit-button' />

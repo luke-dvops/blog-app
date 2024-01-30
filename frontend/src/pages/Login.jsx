@@ -1,10 +1,11 @@
 import React,{ useContext } from 'react'
-import Footer from "../components/Footer"
+
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { UserContext } from "../context/UserContext";
 import axios from "axios"
 import { URL } from "../url"
+import Footer from "../components/Footer"
 
 const Login = () => {
   const [email,setEmail]=useState("")
@@ -30,9 +31,6 @@ const Login = () => {
 
   }
 
-  useEffect(() => {
-    console.log(user); // Log the user state after it has been updated
-  }, [user]);
 
   return (
   <>
