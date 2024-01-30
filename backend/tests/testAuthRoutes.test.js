@@ -96,4 +96,15 @@ it("should handle duplicate username", async () => {
     expect(res).to.have.status(200);
     // Add more assertions based on the expected response
   });
+
+  after((done) => {
+    setTimeout(() => {
+      console.log("Terminating the test suite.");
+      process.exit();
+    }, 1000);
+  
+    done();
+
+});
+
 });
