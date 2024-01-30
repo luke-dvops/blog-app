@@ -207,7 +207,7 @@ describe("Update comments", () => {
     // Make a request to update the comment with valid data
     const res = await chai
       .request(app)
-      .put("/api/comments/656353ebb5c7b318613b3056")
+      .put("/api/comments/65b8b6e5d48cd58c66a3fadb")
       .set("Cookie", [authToken])
       .send(validUpdateData);
 
@@ -257,7 +257,7 @@ describe("Update comments", () => {
   });
 
   it("should update a comment with valid data and ignore additional fields", async () => {
-    const commentIdToUpdate = "656353ebb5c7b318613b3056";
+    const commentIdToUpdate = "65b8b6e5d48cd58c66a3fadb";
 
     // Provide valid data for the update with additional fields
     const validUpdateDataWithAdditionalFields = {
@@ -397,5 +397,48 @@ describe("Delete comments", () => {
 
     // Restore the original function after the test
     Comment.findByIdAndDelete.restore();
+  });
+});
+
+describe("Get Post Comments", () => {
+  it("should retrieve comments for a specific post", async () => {
+    const postId = "validPostId"; // Replace with a valid post ID
+
+    const res = await chai
+      .request(app)
+      .get(`/api/comments/post/${postId}`);
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+    // Additional checks on the response body can be added here
+  });
+
+  it("should return an empty array if no comments are found for a post", async () => {
+    const postId = "nonExistingPostId"; // Use a post ID that has no comments
+
+    const res = await chai
+      .request(app)
+      .get(`/api/comments/post/${postId}`);
+
+    res.should.have.status(200);
+    res.body.should.be.a("array");
+    res.body.length.should.be.eql(0);
+  });
+
+  // Mock server error
+  it("should handle server errors", async () => {
+    const postId = "validPostId"; // Replace with a valid post ID
+
+    // Simulate a server error
+    sinon.stub(Comment, "find").throws(new Error("Simulated server error"));
+
+    const res = await chai
+      .request(app)
+      .get(`/api/comments/post/${postId}`);
+
+    res.should.have.status(500);
+
+    // Restore the original function after the test
+    Comment.find.restore();
   });
 });
