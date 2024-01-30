@@ -27,16 +27,11 @@ router.post("/register", async (req, res) => {
         res.status(200).json(savedUser);
     } catch (err) {
         
-
-        // Check for MongoDB duplicate key error (code 11000)
-        if (err.code === 11000) {
-            return res.status(400).json({ error: "Username is already in use. Please choose a new username." });
-        }
-
         // Handle other types of errors or validation errors if needed
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 
 
