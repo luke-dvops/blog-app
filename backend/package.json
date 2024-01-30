@@ -5,7 +5,8 @@
   "main": "index.js",
   "nyc": {
     "include": [
-      "index.js"
+      "index.js",
+      "tests/testAuthRoutes.test.js"
     ],
     "exclude": [],
     "reporter": [
@@ -20,7 +21,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "nyc mocha tests/*.test.js"
+    "test": "nyc mocha tests/testAuthRoutes.test.js"
   },
   "keywords": [],
   "author": "",

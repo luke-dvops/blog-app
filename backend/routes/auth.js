@@ -112,7 +112,7 @@ router.get('/check-username/:username', async (req, res) => {
         res.status(200).json({ exists: false, message: "Username is available." });
     } catch (err) {
         // Handle errors
-        res.status(500).json({ error: err.message });
+        res.status(400).json({ error: err.message });
     }
   });
 

@@ -7,7 +7,8 @@ chai.use(chaiHttp);
 
 const registerPath = "/api/auth/register";
 const loginPath = "/api/auth/login";
-
+const existingUsernamePath = "/api/auth/check-username";
+const existingEmailPath = "/api/auth/check-email";
 describe("Testing Authentication Routes", () => {
   let token; // Variable to store the authentication token for further requests
 
@@ -95,6 +96,90 @@ it("should handle duplicate username", async () => {
     // Your assertions based on the response
     expect(res).to.have.status(200);
     // Add more assertions based on the expected response
+  });
+
+
+
+
+  const existingUser = {
+    username: "luke"
+  };
+
+  // Before running the tests, register an existing user
+  before(async () => {
+    try {
+      // Register the existing user
+      await chai.request(app).post(registerPath).send(existingUser);
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  // Test case for checking an existing username
+  it("should indicate that the username exists", async () => {
+    try {
+      const username = existingUser.username;
+      const res = await chai.request(app).get(`${existingUsernamePath}/${username}`);
+
+      expect(res).to.have.status(200);
+      expect(res.body).to.deep.equal({ exists: true, message: "Username is already in use. Please choose a new username." });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  // Test case for checking a non-existing username
+  it("should indicate that the username is available", async () => {
+    try {
+      const username = "nonexistinguser";
+      const res = await chai.request(app).get(`${existingUsernamePath}/${username}`);
+
+      expect(res).to.have.status(200);
+      expect(res.body).to.deep.equal({ exists: false, message: "Username is available." });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+
+  const existingEmail = {
+    email: "luketankl@gmail.com"
+  };
+
+  // Before running the tests, register an existing user
+  before(async () => {
+    try {
+      // Register the existing user
+      await chai.request(app).post(registerPath).send(existingEmail);
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  // Test case for checking an existing username
+  it("should indicate that the email exists", async () => {
+    try {
+      const email = existingEmail.email;
+      const res = await chai.request(app).get(`${existingEmailPath}/${email}`);
+
+      expect(res).to.have.status(200);
+      expect(res.body).to.deep.equal({ exists: true, message: "Email is already in use. Please use a different email address." });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  // Test case for checking a non-existing username
+  it("should indicate that the email is available", async () => {
+    try {
+      const email = "nonexistinguser@gmail.com";
+      const res = await chai.request(app).get(`${existingEmailPath}/${email}`);
+
+      expect(res).to.have.status(200);
+      expect(res.body).to.deep.equal({ exists: false, message: "Email is available." });
+    } catch (error) {
+      throw error;
+    }
   });
 
   after((done) => {
