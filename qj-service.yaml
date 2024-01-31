@@ -13,7 +13,6 @@ spec:
   type: LoadBalancer
 
 ---
-
 # backend-service.yaml
 apiVersion: v1
 kind: Service
