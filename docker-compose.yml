@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: ./backend
-      dockerfile: DockerfileLuke
+      dockerfile: C:\Users\User\Downloads\blog-app\backend\Dockerfile_Luke
     image: lukedvops/blog-app-server:latest  
     container_name: blog-app-node-server
     command: npm run start
@@ -33,7 +33,7 @@ services:
   client:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: C:\Users\User\Downloads\blog-app\frontend\Dockerfile_Luke
     image: lukedvops/blog-app-client:latest  
     container_name: blog-app-react-client
     command: npm run dev
