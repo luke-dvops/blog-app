@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: C:\Users\User\Downloads\blog-app\backend\Dockerfile_Luke
-    image: lukedvops/blog-app-server:latest  
+    image: lukedvops/blog-app-server:v3  
     container_name: blog-app-node-server
     command: npm run start
     volumes:
@@ -34,7 +34,7 @@ services:
     build:
       context: ./frontend
       dockerfile: C:\Users\User\Downloads\blog-app\frontend\Dockerfile_Luke
-    image: lukedvops/blog-app-client:latest  
+    image: lukedvops/blog-app-client:v3  
     container_name: blog-app-react-client
     command: npm run dev
     volumes:
