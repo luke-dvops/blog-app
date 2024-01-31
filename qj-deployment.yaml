@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: lukedvops/blog-app-server:latest
+        image: qiujie123/blog-app-server:latest
         ports:
         - containerPort: 5000
         envFrom:
@@ -50,6 +50,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: lukedvops/blog-app-client:latest
+        image: qiujie123/blog-app-client:latest
         ports:
         - containerPort: 5173
