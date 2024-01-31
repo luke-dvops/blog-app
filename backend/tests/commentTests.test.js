@@ -8,14 +8,14 @@ const Comment = require("../models/Comment");
 chai.use(chaiHttp);
 
 describe("Create comments", () => {
-  let authToken; // Variable to store the authentication token
+  let authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWI5MDk5MDA3OTEyNmI2ZjZmYzJlMjEiLCJ1c2VybmFtZSI6Imx1a2UiLCJlbWFpbCI6Imx1a2V0YW5rbEBnbWFpbC5jb20iLCJpYXQiOjE3MDY2MjU0MjQsImV4cCI6MTcwNjg4NDYyNH0.Vq0HK6z7YvINgnOP11VjbPpDPZQ4U4YnfBJEQb2DHHM"; // Variable to store the authentication token
 
   before(async () => {
     try {
       // Perform user login and obtain the authentication token
       const loginCredentials = {
-        email: "test@test.com",
-        password: "test",
+        email: "qj1@gmail.com",
+        password: "qj1",
       };
 
       const loginResponse = await chai
@@ -169,8 +169,8 @@ describe("Update comments", () => {
     try {
       // Perform user login and obtain the authentication token
       const loginCredentials = {
-        email: "test@test.com",
-        password: "test",
+        email: "qj1@gmail.com",
+        password: "qj1",
       };
 
       const loginResponse = await chai
@@ -200,14 +200,14 @@ describe("Update comments", () => {
     const validUpdateData = {
       comment: "This comment has been updated.",
       author: "testtest",
-      postId: "656353ebb5c7b318613b3056",
-      userId: "65603b07d7debecc85789dfc",
+      postId: "65b2a1f6ccf2d0a949d2a92",
+      userId: "655f2854842eab48af35e7c5"
     };
 
     // Make a request to update the comment with valid data
     const res = await chai
       .request(app)
-      .put("/api/comments/65b8b6e5d48cd58c66a3fadb")
+      .put("/api/comments/65603b07d7debecc85789dfb")
       .set("Cookie", [authToken])
       .send(validUpdateData);
 
@@ -257,7 +257,7 @@ describe("Update comments", () => {
   });
 
   it("should update a comment with valid data and ignore additional fields", async () => {
-    const commentIdToUpdate = "65b8b6e5d48cd58c66a3fadb";
+    const commentIdToUpdate = "65603b07d7debecc85789dfb";
 
     // Provide valid data for the update with additional fields
     const validUpdateDataWithAdditionalFields = {
@@ -317,8 +317,8 @@ describe("Delete comments", () => {
     try {
       // Perform user login and obtain the authentication token
       const loginCredentials = {
-        email: "test@test.com",
-        password: "test",
+        email: "qj1@gmail.com",
+        password: "qj1",
       };
 
       const loginResponse = await chai

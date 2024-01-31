@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "nyc mocha tests/testAuthRoutes.test.js"
+    "test": "nyc mocha tests/**/*.test.js"
   },
   "keywords": [],
   "author": "",
