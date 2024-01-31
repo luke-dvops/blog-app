@@ -1,0 +1,58 @@
+version: "3.7"
+
+services:
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile_QJ
+    image: qjdvops/blog-app-server:latest  
+    container_name: blog-app-node-server
+    command: npm run start
+    volumes:
+      - ./backend/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    env_file: ./backend/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+
+  mongo:
+    image: lukedvops/mongo:latest  
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile_QJ
+    image: qjdvops/blog-app-client:latest  
+    container_name: blog-app-react-client
+    command: npm run dev
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:5173"
+    networks:
+      - app-network
+    expose:
+      - "3000"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local
