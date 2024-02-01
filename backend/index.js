@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const commentRoute = require("./routes/comments");
-
+const logger = require("./logger")
 //database
 const connectDB = async () => {
   try {
@@ -31,6 +31,9 @@ app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/comments", commentRoute);
 
+const statusMonitor = require('express-status-monitor');
+app.use(statusMonitor());
+
 //image upload
 const storage = multer.diskStorage({
   destination: (req, file, fn) => {
@@ -51,5 +54,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.listen(process.env.PORT, () => {
   connectDB();
   console.log("app is running on port " + process.env.PORT);
+  logger.info(`Demo project at: ${process.env.PORT}!`);
+logger.error(`Example or error log`)
 });
 module.exports = app;
