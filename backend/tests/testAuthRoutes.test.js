@@ -9,6 +9,7 @@ const registerPath = "/api/auth/register";
 const loginPath = "/api/auth/login";
 const existingUsernamePath = "/api/auth/check-username";
 const existingEmailPath = "/api/auth/check-email";
+const deleteByEmailPath = "/api/auth/deleteUser/:email";
 describe("Testing Authentication Routes", () => {
   let token; // Variable to store the authentication token for further requests
 
@@ -207,6 +208,43 @@ it("should continue register a new user successfully", async () => {
       throw error;
     }
   });
+
+
+
+// Test case for user deletion by email
+it("should delete Luke user by email", async () => {
+  try {
+    // Make a request to delete the user by email
+    const deleteByEmailRes = await chai
+      .request(app)
+      .delete(deleteByEmailPath.replace(":email", "luketankl@gmail.com"))
+      .set("Authorization", `Bearer ${token}`); // Set the authorization header with the token
+
+    // Check if the user is deleted successfully
+    expect(deleteByEmailRes).to.have.status(200);
+    expect(deleteByEmailRes.body).to.have.property("message").to.equal("User deleted successfully!");
+  } catch (error) {
+    throw error;
+  }
+});
+
+
+// Test case for user deletion by email
+it("should delete UniqueUsername user by email", async () => {
+  try {
+    // Make a request to delete the user by email
+    const deleteByEmailRes = await chai
+      .request(app)
+      .delete(deleteByEmailPath.replace(":email", "uniqueemail@example.com"))
+      .set("Authorization", `Bearer ${token}`); // Set the authorization header with the token
+
+    // Check if the user is deleted successfully
+    expect(deleteByEmailRes).to.have.status(200);
+    expect(deleteByEmailRes.body).to.have.property("message").to.equal("User deleted successfully!");
+  } catch (error) {
+    throw error;
+  }
+});
 
   after((done) => {
     setTimeout(() => {
