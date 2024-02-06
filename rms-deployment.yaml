@@ -50,6 +50,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: lukedvops/blog-app-client:latest
+        image: lukedvops/blog-app-client:v4
         ports:
         - containerPort: 5173
