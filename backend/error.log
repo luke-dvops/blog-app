@@ -1,1 +1,19 @@
 error: Example or error log {"timestamp":"2024-02-01T03:23:24.206Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:33:39.843Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:34:25.978Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:35:56.512Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:36:17.806Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:36:40.722Z"}
+error: Example or error log {"timestamp":"2024-02-01T08:39:30.798Z"}
+2024-02-01T08:57:53.097Z [error]: Example or error log
+error: Example or error log {"timestamp":"2024-02-01T08:59:27.082Z"}
+error: Example or error log {"timestamp":"2024-02-01T12:18:06.813Z"}
+error: Example or error log {"timestamp":"2024-02-01T12:28:59.457Z"}
+error: Example or error log {"timestamp":"2024-02-01T12:30:53.130Z"}
+[31m[31merror[31m: [31mExample or error log[31m {"timestamp":"2024-02-01T12:47:26.870Z"}[39m
+[31merror[39m: [31mExample or error log[39m {"timestamp":"2024-02-01T12:49:48.438Z"}
+{"level":"error","message":"Example or error log","timestamp":"2024-02-01T12:51:45.647Z"}
+{"level":"error","message":"Example or error log","timestamp":"2024-02-01T13:39:47.520Z"}
+{"level":"error","message":"Example or error log","timestamp":"2024-02-01T13:41:22.279Z"}
+{"level":"error","message":"Example or error log","timestamp":"2024-02-06T06:22:27.715Z"}
+{"level":"error","message":"Example or error log","timestamp":"2024-02-06T06:24:31.285Z"}

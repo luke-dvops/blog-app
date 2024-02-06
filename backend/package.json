@@ -6,6 +6,7 @@
   "nyc": {
     "include": [
       "index.js",
+      "tests/commentTests.test.js",
       "tests/testAuthRoutes.test.js"
     ],
     "exclude": [],
@@ -43,7 +44,8 @@
     "multer": "^1.4.5-lts.1",
     "nyc": "^15.1.0",
     "path": "^0.12.7",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "sinon": "^17.0.1"

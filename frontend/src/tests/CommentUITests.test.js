@@ -389,6 +389,10 @@ describe('Testing Edit Comment page UI', () => {
 
 describe('Comment for PostDetails page', () => {
 
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear mocks before each test
+  });
+
   test('should initially render the comments section', async () => {
     // Mock response for post details and comments
     axios.get.mockImplementation((url) => {
@@ -400,7 +404,7 @@ describe('Comment for PostDetails page', () => {
       }
       return Promise.reject(new Error('not found'));
     });
-  
+
     render(
       <MemoryRouter initialEntries={['/posts/post/123']}>
         <Routes>
@@ -408,7 +412,7 @@ describe('Comment for PostDetails page', () => {
         </Routes>
       </MemoryRouter>
     );
-  
+
     // Wait for the comment section to appear
     const commentSection = await screen.findByTestId('comment-heading');
     expect(commentSection).toBeInTheDocument();
@@ -484,7 +488,7 @@ describe('Comment for PostDetails page', () => {
     expect(commentInput).toBeInTheDocument();
   });
 
-  test('should allow adding a new comment', async () => {
+  test('should add a new comment after add-comment button is pressed with valid inputs', async () => {
     const mockUser = {
       _id: 'testUserId',
       username: 'testUser'
@@ -527,7 +531,7 @@ describe('Comment for PostDetails page', () => {
         expect.objectContaining({
           comment: 'New comment',
           author: mockUser.username,
-          postId: 'validCommentId', // Adjusted postId
+          postId: 'validCommentId', 
           userId: mockUser._id
         }),
         expect.objectContaining({ withCredentials: true })

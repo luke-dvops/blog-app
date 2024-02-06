@@ -64,7 +64,7 @@ const EditComment = () => {
       <Navbar />
       <div className="px-6 md:px-[200px] mt-8">
         <h1 data-testid="update-a-comment" className="font-bold md:text-2xl text-xl ">
-          Update a comment
+          Edit comments
         </h1>
         {error && <p className="text-red-500">{error}</p>}
         <form className="w-full flex flex-col space-y-4 md:space-y-8 mt-4">
